@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.fabricexplorer.mapper.TransactionMapper" >
+    <select id="getTxCountByBlockNum" resultType="Integer">
+        select
+            blocknum,txcount
+        from
+            blocks
+        where
+            channel_genesis_hash = #{channel_genesis_hash} and
+            blocknum = #{blockNum}
+    </select>
+    <select id="getTransactionByID" resultType="com.example.fabricexplorer.entity.transaction" parameterType="java.util.Map">
+        select
+            t.txhash,t.validation_code,t.payload_proposal_hash,t.creator_msp_id,t.endorser_msp_id,t.chaincodename,t.type,t.createdt,t.read_set,
+            t.write_set,channel.name as channelName
+        from
+            TRANSACTIONS as t
+        inner join
+            channel
+        on
+            t.channel_genesis_hash=channel.channel_genesis_hash
+        where
+            t.txhash = #{txHash};
+    </select>
+</mapper>
