@@ -92,7 +92,7 @@ public class CreateChannel {
 			mychannel = fabClient.getInstance().getChannel("mychannel");
 			mychannel.joinPeer(peer0_org2);
 			mychannel.joinPeer(peer1_org2);
-			
+
 			Logger.getLogger(CreateChannel.class.getName()).log(Level.INFO, "Channel created "+mychannel.getName());
             Collection peers = mychannel.getPeers();
             Iterator peerIter = peers.iterator();

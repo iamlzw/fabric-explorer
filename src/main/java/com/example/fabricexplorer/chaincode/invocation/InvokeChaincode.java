@@ -64,7 +64,7 @@ public class InvokeChaincode {
 			ChannelClient channelClient = fabClient.createChannelClient(Config.CHANNEL_NAME);
 			Channel channel = channelClient.getChannel();
 			Peer peer = fabClient.getInstance().newPeer(Config.ORG1_PEER_0, Config.ORG1_PEER_0_URL);
-			EventHub eventHub = fabClient.getInstance().newEventHub("eventhub01", "grpc://localhost:7053");
+			EventHub eventHub = fabClient.getInstance().newEventHub("eventhub01", "grpc://23.160.193.55:7053");
 			Orderer orderer = fabClient.getInstance().newOrderer(Config.ORDERER_NAME, Config.ORDERER_URL);
 			channel.addPeer(peer);
 			channel.addEventHub(eventHub);
@@ -74,8 +74,9 @@ public class InvokeChaincode {
 			TransactionProposalRequest request = fabClient.getInstance().newTransactionProposalRequest();
 			ChaincodeID ccid = ChaincodeID.newBuilder().setName(Config.CHAINCODE_1_NAME).build();
 			request.setChaincodeID(ccid);
-			request.setFcn("createCar");
-			String[] arguments = { "CAR1", "Chevy", "Volt", "Red", "Nick" };
+			request.setFcn("changeCarOwner");
+			String[] arguments = {"CAR1","Brad"};
+//			String[] arguments = { "CAR1", "Chevy", "Volt", "Red", "Nick" };
 			request.setArgs(arguments);
 			request.setProposalWaitTime(1000);
 

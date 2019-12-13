@@ -34,8 +34,16 @@ import java.util.logging.Logger;
 
 import javax.xml.bind.DatatypeConverter;
 
+import com.example.fabricexplorer.client.CAClient;
+import com.example.fabricexplorer.client.ChannelClient;
+import com.example.fabricexplorer.client.FabricClient;
+import com.example.fabricexplorer.config.Config;
 import com.example.fabricexplorer.user.CAEnrollment;
 import com.example.fabricexplorer.user.UserContext;
+import org.hyperledger.fabric.sdk.Channel;
+import org.hyperledger.fabric.sdk.EventHub;
+import org.hyperledger.fabric.sdk.Orderer;
+import org.hyperledger.fabric.sdk.Peer;
 import org.hyperledger.fabric.sdk.exception.CryptoException;
 
 /**

@@ -12,7 +12,7 @@ import java.util.Date;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class peer_ref_channel {
+public class PeerRefChannel {
     private BigInteger id;
     private Date createDt;
     private String peer_id;

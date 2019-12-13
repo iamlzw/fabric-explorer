@@ -32,11 +32,11 @@ public class Config {
 	public static final String ORG2_USR_ADMIN_PK = ORG2_USR_BASE_PATH + File.separator + "keystore";
 	public static final String ORG2_USR_ADMIN_CERT = ORG2_USR_BASE_PATH + File.separator + "admincerts";
 	
-	public static final String CA_ORG1_URL = "http://localhost:7054";
+	public static final String CA_ORG1_URL = "http://23.160.193.55:7054";
 	
-	public static final String CA_ORG2_URL = "http://localhost:8054";
+	public static final String CA_ORG2_URL = "http://23.160.193.55:8054";
 	
-	public static final String ORDERER_URL = "grpc://localhost:7050";
+	public static final String ORDERER_URL = "grpc://23.160.193.55:7050";
 	
 	public static final String ORDERER_NAME = "orderer.example.com";
 	
@@ -44,19 +44,19 @@ public class Config {
 	
 	public static final String ORG1_PEER_0 = "peer0.org1.example.com";
 	
-	public static final String ORG1_PEER_0_URL = "grpc://localhost:7051";
+	public static final String ORG1_PEER_0_URL = "grpc://23.160.193.55:7051";
 	
 	public static final String ORG1_PEER_1 = "peer1.org1.example.com";
 
-	public static final String ORG1_PEER_1_URL = "grpc://localhost:8051";
+	public static final String ORG1_PEER_1_URL = "grpc://23.160.193.55:8051";
 	
     public static final String ORG2_PEER_0 = "peer0.org2.example.com";
 
-	public static final String ORG2_PEER_0_URL = "grpc://localhost:9051";
+	public static final String ORG2_PEER_0_URL = "grpc://23.160.193.55:9051";
 
 	public static final String ORG2_PEER_1 = "peer1.org2.example.com";
 
-	public static final String ORG2_PEER_1_URL = "grpc://localhost:10051";
+	public static final String ORG2_PEER_1_URL = "grpc://23.160.193.55:10051";
 	
 	public static final String CHAINCODE_ROOT_DIR = "network_resources"+File.separator+"chaincode";
 	

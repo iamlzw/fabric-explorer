@@ -12,7 +12,7 @@ import java.util.Date;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class peer_ref_chaincode {
+public class PeerRefChainCode {
     private BigInteger id;
     private String peer_id;
     private String chaincode_id;

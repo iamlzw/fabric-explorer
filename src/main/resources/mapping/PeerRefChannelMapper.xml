@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.fabricexplorer.mapper.PeerRefChannelMapper">
+
+    <select id="getPeers" resultType="com.example.fabricexplorer.entity.Peer">
+        select * from peer_ref_channel
+    </select>
+
+    <select id="validCount" parameterType="com.example.fabricexplorer.entity.PeerRefChannel" resultType="integer">
+        select count(1) as c from peer_ref_channel where peer_id=#{peer_id} and channel_id=#{channel_id}
+    </select>
+
+    <insert id="savePeerRefChannel" parameterType="com.example.fabricexplorer.entity.PeerRefChannel">
+        insert into peer_ref_channel(createdt, peer_id, channel_id, peer_type)
+        values (#{createDt},#{peer_id},#{channel_id},#{peer_type})
+    </insert>
+
+</mapper>

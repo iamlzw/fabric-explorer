@@ -14,12 +14,14 @@ import java.util.Date;
 @EqualsAndHashCode
 public class Blocks {
     private BigInteger id;
-    private int blockNum;
+    private long blockNum;
     private String dataHash;
     private String preHash;
-    private int txCount;
+    private String blockHash;
+    private long txCount;
     private Date createDt;
     private String pre_blockHash;
     private String channel_genesis_hash;
     private int blksize;
+
 }

@@ -2,18 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.fabricexplorer.mapper.BlocksMapper">
     <select id="getBlockActivityList" resultType="java.util.List">
-        select
-            blocks.blocknum,blocks.txcount ,blocks.datahash ,blocks.blockhash ,blocks.prehash,blocks.createdt,
+        selectblocknum,blocks.txcount ,blocks.datahash ,blocks.blockhash ,blocks.prehash,blocks.createdt,
             (SELECT  array_agg(txhash) as txhash FROM transactions where blockid = blocks.blocknum and
        channel_genesis_hash = '${channel_genesis_hash}' group by transactions.blockid ),
       channel.name as channelname  from blocks inner join channel on blocks.channel_genesis_hash = channel.channel_genesis_hash  where
        blocks.channel_genesis_hash ='${channel_genesis_hash}' and blocknum >= 0
        order by blocks.blocknum desc limit 3;
     </select>
-    <select id="getTransactionByID" resultType="com.example.fabricexplorer.entity.transaction" parameterType="java.util.Map">
+    <select id="getTransactionByID" resultType="com.example.fabricexplorer.entity.Transaction" parameterType="java.util.Map">
         select
             t.txhash,t.validation_code,t.payload_proposal_hash,t.creator_msp_id,t.endorser_msp_id,t.chaincodename,t.type,t.createdt,t.read_set,
-            t.write_set,channel.name as channelName
+            t.write_sinsertet,channel.name as channelName
         from
             TRANSACTIONS as t
         inner join
@@ -24,12 +23,18 @@
             t.txhash = #{txHash};
     </select>
     
-    <select id="getBlocksCount" parameterType="com.example.fabricexplorer.entity.Blocks" resultType="Integer">
-        select count(1) as c from blocks where blocknum='${
-			block.blocknum
-		}' and txcount='${block.txcount}'
-        and channel_genesis_hash='${block.channel_genesis_hash}' and prehash='${
-			block.prehash
-		}' and datahash='${block.datahash}'
+    <select id="getBlocksCount" parameterType="com.example.fabricexplorer.entity.Blocks" resultType="integer">
+        select count(1) as c from blocks where blocknum=#{blockNum} and txcount=#{txCount}
+        and channel_genesis_hash=#{channel_genesis_hash} and prehash=#{preHash} and datahash=#{dataHash}
     </select>
+
+    <insert id="saveBlock" parameterType="com.example.fabricexplorer.entity.Blocks">
+        insert into blocks(id, blocknum, datahash, prehash, txcount, createdt, pre_blockhash, blockhash, channel_genesis_hash, blksize) value
+        (#{id},#{blockNum},#{dataHash},#{preHash},#{txCount},#{createDt},#{preHash},#{blockHash},#{channel_genesis_hash},#{blksize})
+    </insert>
+
+    <update id="updateChannelAfterSaveBlock" parameterType="string">
+        update channel set blocks = blocks + 1 where channel_genesis_hash = #{channe_genesis_hash}
+    </update>
+
 </mapper>

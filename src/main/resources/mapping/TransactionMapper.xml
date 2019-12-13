@@ -10,7 +10,7 @@
             channel_genesis_hash = #{channel_genesis_hash} and
             blocknum = #{blockNum}
     </select>
-    <select id="getTransactionByID" resultType="com.example.fabricexplorer.entity.transaction" parameterType="java.util.Map">
+    <select id="getTransactionByID" resultType="com.example.fabricexplorer.entity.Transaction" parameterType="java.util.Map">
         select
             t.txhash,t.validation_code,t.payload_proposal_hash,t.creator_msp_id,t.endorser_msp_id,t.chaincodename,t.type,t.createdt,t.read_set,
             t.write_set,channel.name as channelName
@@ -23,4 +23,37 @@
         where
             t.txhash = #{txHash};
     </select>
+
+    <select id="existTransaction" parameterType="com.example.fabricexplorer.entity.Transaction" resultType="Integer">
+        select count(1) as c from transactions where block_id = #{blockId}
+        and txhash = #{txHash} and channel_genesis_hash = #{channelGenesisHash}
+    </select>
+
+    <insert id="saveTransaction" parameterType="com.example.fabricexplorer.entity.Transaction">
+        insert into
+            transactions(id, block_id, txhash,
+            createdt, chaincodename, status,
+            creator_msp_id, endorser_msp_id, chaincode_id,
+            type, read_set, write_set,
+            channel_genesis_hash, validation_code, envelope_signature,
+            payload_extension, creator_id_bytes, creator_nonce,
+            chaincode_proposal_input, tx_response, payload_proposal_hash,
+            endorser_id_bytes, endorser_signature) VALUE
+        (#{id},#{blockId},#{txHash},
+        #{createDt},#{chainCode},#{status},
+        #{creatorMspId},#{endorserMspId},#{chaincodeId},
+        #{type},#{readSet},#{writeSet},
+        #{channelGenesisHash},#{validationCode},#{envelopeSignature},
+        #{payloadExtension},#{creatorIdBytes},#{creatorNonce},
+        #{chaincodeProposalInput},#{txResponse},#{payloadProposalHash},
+        #{endorserIdBytes},#{endorserSignature}
+        )
+    </insert>
+
+    <update id="updateChainCodeAfterSaveTransaction" parameterType="com.example.fabricexplorer.entity.Transaction">
+        update chaincodes set txcount =txcount+1 where channel_genesis_hash=#{channelGenesisHash}
+    </update>
+    <update id="updateChannelAfterSaveTransaction" parameterType="com.example.fabricexplorer.entity.Transaction">
+        update channel set trans =trans+1 where channel_genesis_hash=#{channelGenesisHash}
+    </update>
 </mapper>

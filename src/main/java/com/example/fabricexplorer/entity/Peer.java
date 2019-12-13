@@ -18,6 +18,7 @@ public class Peer {
     private String channel_genesis_hash;
     private String mspId;
     private String events;
+    private String requests;
     private String server_hostname;
     private Date createDt;
     private String peer_type;

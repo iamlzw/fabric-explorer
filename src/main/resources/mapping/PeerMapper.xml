@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.fabricexplorer.mapper.PeerMapper">
+
+    <select id="getPeers" resultType="com.example.fabricexplorer.entity.Peer">
+        select * from peer where peer_type = 'peer'
+    </select>
+
+    <select id="validPeer" parameterType="com.example.fabricexplorer.entity.Peer" resultType="integer">
+        select count(1) as c from peer where mspid=#{mspId} and server_hostname=#{server_hostname}
+    </select>
+
+    <insert id="insertNewPeers" parameterType="com.example.fabricexplorer.entity.Peer">
+        insert into peer(org, channel_genesis_hash, mspid, requests, events, server_hostname, createdt, peer_type)
+        values (#{org},#{channel_genesis_hash},#{mspId},#{requests},#{events},#{server_hostname},#{createDt},#{peer_type})
+    </insert>
+
+    <select id="getNodesCount" resultType="integer">
+        select count(1) from peer where peer_type = 'peer'
+    </select>
+
+</mapper>

@@ -12,7 +12,7 @@ import java.util.Date;
 @Setter
 @ToString
 @EqualsAndHashCode
-public class chaincodes {
+public class Chaincode {
     private BigInteger id;
     private String name;
     private String version;

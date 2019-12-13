@@ -4,44 +4,59 @@ import com.example.fabricexplorer.client.CAClient;
 import com.example.fabricexplorer.client.ChannelClient;
 import com.example.fabricexplorer.client.FabricClient;
 import com.example.fabricexplorer.config.Config;
+import com.example.fabricexplorer.entity.Peer;
+import com.example.fabricexplorer.entity.PeerRefChainCode;
+import com.example.fabricexplorer.entity.PeerRefChannel;
+import com.example.fabricexplorer.mapper.PeerMapper;
+import com.example.fabricexplorer.mapper.PeerRefChaincodeMapper;
+import com.example.fabricexplorer.mapper.PeerRefChannelMapper;
 import com.example.fabricexplorer.network.CreateChannel;
 import com.example.fabricexplorer.service.PeerService;
 import com.example.fabricexplorer.user.UserContext;
 import org.hyperledger.fabric.sdk.Channel;
-import org.hyperledger.fabric.sdk.Peer;
 import org.hyperledger.fabric.sdk.exception.CryptoException;
 import org.hyperledger.fabric.sdk.exception.InvalidArgumentException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Service("PeerService")
 public class PeerServiceImpl implements PeerService {
+
+    @Autowired
+    private PeerMapper peerMapper;
+
+    @Autowired
+    private PeerRefChannelMapper peerRefChannelMapper;
+
     @Override
-    public void insertNewPeers() throws Exception {
-        String caUrl = Config.CA_ORG1_URL;
-        CAClient caClient = new CAClient(caUrl, null);
-        // Enroll Admin to Org1MSP
-        UserContext adminUserContext = new UserContext();
-        adminUserContext.setName(Config.ADMIN);
-        adminUserContext.setAffiliation(Config.ORG1);
-        adminUserContext.setMspId(Config.ORG1_MSP);
-        caClient.setAdminUserContext(adminUserContext);
-        adminUserContext = caClient.enrollAdminUser(Config.ADMIN, Config.ADMIN_PASSWORD);
+    public void insertNewPeers(Peer peer) {
+        if (peerMapper.validPeer(peer) == 0){
+            peerMapper.insertNewPeers(peer);
+        }
+    }
 
-        FabricClient fabClient = new FabricClient(adminUserContext);
+    @Override
+    public List<Peer> getPeers() {
+        return peerMapper.getPeers();
+    }
 
-        ChannelClient channelClient = fabClient.createChannelClient(Config.CHANNEL_NAME);
-        Channel channel = channelClient.getChannel();
-        Collection peers = channel.getPeers();
-        Iterator peerIter = peers.iterator();
-        while (peerIter.hasNext())
-        {
-            Peer pr = (Peer) peerIter.next();
-            Logger.getLogger(CreateChannel.class.getName()).log(Level.INFO,pr.getName()+ " at " + pr.getUrl());
+    @Override
+    public int getNodesCount() {
+        return peerMapper.getNodesCount();
+    }
+
+    @Override
+    public void savePeerRefChannel(PeerRefChannel peerRefChannel) {
+        if (peerRefChannelMapper.validCount(peerRefChannel) == 0){
+            peerRefChannelMapper.savePeerRefChannel(peerRefChannel);
         }
     }
 }

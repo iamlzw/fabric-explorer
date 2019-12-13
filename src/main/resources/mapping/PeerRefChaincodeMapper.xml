@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.fabricexplorer.mapper.PeerRefChaincodeMapper">
+
+    <select id="validCount" parameterType="com.example.fabricexplorer.entity.PeerRefChainCode" resultType="integer">
+        select count(1) as c from peer_ref_chaincode where peer_id=#{peer_id} and channel_id=#{channel_id} and chaincode_id=#{chaincode_id} and cc_version=#{cc_version}
+    </select>
+
+    <insert id="savePeerRefChaincode" parameterType="com.example.fabricexplorer.entity.PeerRefChainCode">
+        insert into peer_ref_chaincode(peer_id, chaincode_id, cc_version, channel_id)
+        values (#{peer_id},#{chaincode_id},#{cc_version},#{channel_id})
+    </insert>
+
+</mapper>

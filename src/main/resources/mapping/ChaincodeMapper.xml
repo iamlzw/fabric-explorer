@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.fabricexplorer.mapper.ChaincodeMapper">
+
+    <select id="validChainCode" parameterType="string" resultType="integer">
+        select count(1) as c from chaincodes where name=#{chainCodeName}
+    </select>
+
+    <insert id="saveChaincode" parameterType="com.example.fabricexplorer.entity.Chaincode">
+        insert into chaincodes(name, version, path, channel_genesis_hash, txcount, createdt)
+        values (#{name},#{version},#{path},#{channel_genesis_hash},#{txCount},#{createDt})
+    </insert>
+
+</mapper>

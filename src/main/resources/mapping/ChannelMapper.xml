@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.fabricexplorer.mapper.ChannelMapper">
+    <select id="getChannelConfig" resultType="com.example.fabricexplorer.entity.Channel">
+        select * from channel where channel_genesis_hash = #{channel_genesis_hahs}
+    </select>
+    <select id="getChannel" resultType="com.example.fabricexplorer.entity.Channel" parameterType="java.util.Map">
+        select * from channel where name = #{channelName} and channel_genesis_hash = #{channel_genesis_hash}
+    </select>
+
+    <select id="getChannelCount" parameterType="com.example.fabricexplorer.entity.Channel" resultType="integer">
+        select count(1) from channel where name = #{name} and channel_genesis_hash = #{channel_genesis_hash}
+    </select>
+
+
+
+    <insert id="saveChannel" parameterType="com.example.fabricexplorer.entity.Channel">
+        insert into
+            channel(id, name, blocks, trans, createdt,
+             channel_genesis_hash, channel_hash, channel_config,
+              channel_block, channel_tx, channel_version)
+        VALUE
+        (#{id},#{name},#{blocks},#{trans},#{createDt},
+        #{channel_genesis_hash},#{channel_hash},#{channel_config},
+        #{channel_block},#{channel_tx},#{channel_version})
+    </insert>
+
+    <update id="updateChannel" parameterType="com.example.fabricexplorer.entity.Channel">
+        update
+            channel
+        set
+            blocks = #{blocks} and
+            trans = #{trans} and
+            channel_hash = #{channel_hash}
+        where
+            name = #{name} and
+            channel_genesis_hash = #{channel_genesis_hash}
+    </update>
+
+</mapper>
