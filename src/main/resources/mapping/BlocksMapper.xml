@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.fabricexplorer.mapper.BlocksMapper">
-    <select id="getBlockActivityList" resultType="java.util.List">
-        selectblocknum,blocks.txcount ,blocks.datahash ,blocks.blockhash ,blocks.prehash,blocks.createdt,
-            (SELECT  array_agg(txhash) as txhash FROM transactions where blockid = blocks.blocknum and
-       channel_genesis_hash = '${channel_genesis_hash}' group by transactions.blockid ),
-      channel.name as channelname  from blocks inner join channel on blocks.channel_genesis_hash = channel.channel_genesis_hash  where
-       blocks.channel_genesis_hash ='${channel_genesis_hash}' and blocknum >= 0
-       order by blocks.blocknum desc limit 3;
+    <select id="getBlockActivityList" resultType="java.util.Map">
+        select
+            A.id, A.blocknum, A.datahash, A.prehash, A.txcount, DATE_FORMAT(A.createdt,'%Y-%m-%d') as createdt, A.pre_blockhash, A.channel_genesis_hash, blockhash,C.name as channelname,
+            (SELECT
+                txhash
+            FROM
+                transactions
+            where
+                block_id = A.blocknum
+            and channel_genesis_hash = #{channelGenesis}
+            group by
+                block_id) txhash
+        from
+            blocks AS A
+        inner join
+            channel AS C
+        on
+            A.channel_genesis_hash = C.channel_genesis_hash
+        where
+            A.channel_genesis_hash =#{channelGenesisHash}
+        and blocknum >= 0
+        order by blocknum desc limit 3;
     </select>
     <select id="getTransactionByID" resultType="com.example.fabricexplorer.entity.Transaction" parameterType="java.util.Map">
         select
@@ -23,9 +38,13 @@
             t.txhash = #{txHash};
     </select>
     
-    <select id="getBlocksCount" parameterType="com.example.fabricexplorer.entity.Blocks" resultType="integer">
+    <select id="validCount" parameterType="com.example.fabricexplorer.entity.Blocks" resultType="integer">
         select count(1) as c from blocks where blocknum=#{blockNum} and txcount=#{txCount}
         and channel_genesis_hash=#{channel_genesis_hash} and prehash=#{preHash} and datahash=#{dataHash}
+    </select>
+
+    <select id="getBlocksCount" resultType="integer">
+        select count(1) as c from blocks
     </select>
 
     <insert id="saveBlock" parameterType="com.example.fabricexplorer.entity.Blocks">
@@ -36,5 +55,46 @@
     <update id="updateChannelAfterSaveBlock" parameterType="string">
         update channel set blocks = blocks + 1 where channel_genesis_hash = #{channe_genesis_hash}
     </update>
+
+    <select id="getBlockAndTxList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+            a.*
+        FROM
+            (
+            SELECT
+                (
+                SELECT
+                    c.NAME
+                FROM
+                    channel c
+                WHERE
+                    c.channel_genesis_hash = #{channelGenesisHash} ) as channelname,
+                    blocks.blocknum,
+                    blocks.txcount,
+                    blocks.datahash,
+                    blocks.blockhash,
+                    blocks.prehash,
+                    blocks.createdt,
+                    ( SELECT txhash FROM transactions WHERE block_id = blocks.blocknum
+                        <if test="orgs!=null">
+                            and creator_msp_id in
+                            <foreach collection="orgs" item="org" index="index" open="(" close=")" separator=",">
+                                #{org}
+                            </foreach>
+                        </if>
+                     AND channel_genesis_hash = #{channelGenesisHash} AND createdt BETWEEN #{from} AND #{to} ) txhash
+                FROM
+                    blocks
+                WHERE
+                    blocks.channel_genesis_hash = #{channelGenesisHash}
+                    AND blocknum >= 0
+                    AND blocks.createdt BETWEEN #{from}
+                    AND #{to}
+                ORDER BY
+                    blocks.blocknum DESC
+                ) a
+        WHERE
+	        a.txhash IS NOT NULL
+    </select>
 
 </mapper>

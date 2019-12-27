@@ -7,4 +7,5 @@ import org.apache.ibatis.annotations.Mapper;
 public interface ChaincodeMapper {
     int validChainCode(String chainCodeName);
     void saveChaincode(Chaincode chaincode);
+    int getChainCodeCount();
 }

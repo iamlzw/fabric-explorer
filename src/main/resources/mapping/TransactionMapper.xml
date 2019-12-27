@@ -56,4 +56,40 @@
     <update id="updateChannelAfterSaveTransaction" parameterType="com.example.fabricexplorer.entity.Transaction">
         update channel set trans =trans+1 where channel_genesis_hash=#{channelGenesisHash}
     </update>
+
+    <select id="getTxCount" resultType="integer">
+        select count(1) from transactions
+    </select>
+
+    <select id="getTxCountList" resultType="java.util.Map" parameterType="string">
+        select t.creator_msp_id as name,count(1) as value from transactions as t  where channel_genesis_hash = #{channelGenesisHash} group by creator_msp_id
+    </select>
+
+    <select id="getTxList" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+            t.creator_msp_id,
+            t.txhash,
+            t.type,
+            t.chaincodename,
+            t.createdt,
+            t.chaincode_id,
+            channel.NAME AS channelName
+        FROM
+            transactions AS t
+            INNER JOIN channel ON t.channel_genesis_hash = channel.channel_genesis_hash
+        WHERE
+            t.block_id >= #{ blockNum }
+            AND t.id >= #{ txid }
+            <if test="orgs!=null">
+                and creator_msp_id in
+                <foreach collection="orgs" item="org" index="index" open="(" close=")" separator=",">
+                    #{org}
+                </foreach>
+            </if>
+            AND t.channel_genesis_hash = #{channelGenesisHash}
+            AND t.createdt BETWEEN #{from}
+            AND #{to}
+        ORDER BY
+	        t.id DESC
+    </select>
 </mapper>

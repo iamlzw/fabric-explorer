@@ -7,6 +7,7 @@ import com.example.fabricexplorer.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service("TransactionService")
@@ -26,5 +27,20 @@ public class TransactionServiceImpl implements TransactionService {
             transactionMapper.updateChainCodeAfterSaveTransaction(transaction);
             transactionMapper.updateChannelAfterSaveTransaction(transaction);
         }
+    }
+
+    @Override
+    public int getTxCount() {
+        return transactionMapper.getTxCount();
+    }
+
+    @Override
+    public List<Map> getTxList(Map map) {
+        return transactionMapper.getTxList(map);
+    }
+
+    @Override
+    public List<Map> getTxCountList(String channelGenesisHash) {
+        return transactionMapper.getTxCountList(channelGenesisHash);
     }
 }

@@ -29,4 +29,9 @@ public class ChaincodeServiceImpl implements ChaincodeService {
             peerRefChaincodeMapper.savePeerRefChaincode(peerRefChainCode);
         }
     }
+
+    @Override
+    public int getChainCodeCount() {
+        return chaincodeMapper.getChainCodeCount();
+    }
 }

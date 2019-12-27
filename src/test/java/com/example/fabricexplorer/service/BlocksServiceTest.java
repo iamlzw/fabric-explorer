@@ -272,6 +272,7 @@ class BlocksServiceTest {
                                 writeSetMap.put(rwsIndex,writeSetList);
                             }
                         }
+                        transaction.setChaincodeId(chaincodeName);
                         transaction.setReadSet(JSON.toJSONString(readSetMap.toString()));
                         transaction.setReadSet(JSON.toJSONString(writeSetMap.toString()));
                     }

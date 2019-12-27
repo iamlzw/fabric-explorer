@@ -11,4 +11,8 @@
         values (#{name},#{version},#{path},#{channel_genesis_hash},#{txCount},#{createDt})
     </insert>
 
+    <select id="getChainCodeCount" resultType="integer">
+        select count(1) from chaincodes
+    </select>
+
 </mapper>
